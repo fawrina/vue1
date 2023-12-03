@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vue Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <form>
+      <input type="text" v-model="newItem" placeholder="Введите новую запись">
+      <button :disabled="newItem === ''" @click="addNewItem">Добавить запись</button>
+      <p v-show="newItem.length > 0 && newItem.length < maxCharacters" 
+         :style="{ color: newItem.length > maxCharacters ? 'red' : (newItem.length > maxCharacters - 10 ? 'orange' : 'black') }">
+         {{remainingCharacters}}
+      </p>
+    </form>
+    <p v-if="items.length === 0">Нет записей</p>
+    <p v-else-if="items.length === 1">Запись</p>
+    <p v-else>Записи</p>
+    <p v-show="items.length > 0">Всего {{items.length}} записей</p>
+    <ul>
+      <li v-for="item in items" :key="item.id">{{item.text}} - {{item.time}}</li>
+    </ul>
+  </div>
+  
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        newItem: '',
+        maxCharacters: 10,
+        items: []
+      },
+      methods: {
+        addNewItem: function() {
+          this.items.push({
+            id: Date.now(),
+            text: this.newItem,
+            time: new Date().toLocaleString()
+          });
+          this.newItem = '';
+        }
+      },
+      computed: {
+        remainingCharacters: function() {
+          return this.maxCharacters - this.newItem.length;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
